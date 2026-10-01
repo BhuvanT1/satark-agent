@@ -1,0 +1,52 @@
+# CI: every push runs the unit tests, the 37-case scam benchmark and the
+# adversarial attack bench fully offline (no API key, no network lookups).
+#
+# Publishing the Docker image is manual: Actions → ci → "Run workflow".
+# It needs repo secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
+# (and optionally GEMINI_API_KEY to bake the AI mode into the public image).
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+env:
+  SATARK_LLM_PROVIDER: none
+  SATARK_ENABLE_RDAP: "0"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -r requirements-dev.txt
+      - name: Unit tests
+        run: python -m pytest -q tests
+      - name: Scam benchmark (37 cases)
+        run: python eval/run_eval.py
+      - name: Adversarial attack bench (12 attacks + ablation)
+        run: python eval/run_attack_bench.py
+  publish:
+    if: github.event_name == 'workflow_dispatch'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          build-args: |
+            GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/satark-agent:1.0.0
+            ${{ secrets.DOCKERHUB_USERNAME }}/satark-agent:latest

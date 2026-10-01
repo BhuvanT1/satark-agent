@@ -1,0 +1,55 @@
+apiVersion: aikart.dev/v1
+kind: AgentManifest
+metadata:
+  name: satark-fraud-first-responder
+  displayName: "Satark - Cyber-Fraud First Responder"
+  description: "Paste a suspicious SMS, WhatsApp message or call, or describe a fraud: Satark investigates links, UPI IDs and numbers, scores the scam risk, plans your golden-hour response and drafts the cybercrime complaint, bank letter and family alert."
+runtime:
+  type: docker
+  image: "docker.io/architects1221/satark-agent:1.0.0"
+  command: ["python", "run.py", "--offline"]
+resources:
+  cpu: 1
+  memoryMb: 512
+  timeoutSeconds: 180
+inputs:
+  - name: situation
+    label: "Paste the suspicious message, or describe what happened (any language)"
+    type: textarea
+    required: true
+    default: "I got a WhatsApp video call from a man in police uniform who said he was from Mumbai Cyber Crime. He said a FedEx parcel in my name had MDMA and fake passports, and that my Aadhaar is linked to a money laundering case. He kept me on the video call for 3 hours, told me not to tell anyone, and 40 minutes ago made me transfer Rs 2,50,000 to an RBI safe account ramesh.kumar@okaxis for verification. He called from +92 301 2345678."
+  - name: money_lost
+    label: "Did you lose money?"
+    type: select
+    required: true
+    options: ["Not sure", "No - I just want to check", "Yes - I already paid / money was debited"]
+    default: "Not sure"
+  - name: amount
+    label: "Amount lost in Rs (leave 0 if none)"
+    type: number
+    required: false
+    default: 0
+  - name: when
+    label: "When did it happen? (e.g. 40 minutes ago, today 10:30 AM)"
+    type: text
+    required: false
+  - name: payment_mode
+    label: "How was the money sent?"
+    type: select
+    required: false
+    options: ["Not applicable", "UPI", "Debit / Credit card", "Net banking / IMPS / NEFT", "Wallet", "Crypto / gift card", "Cash / other"]
+    default: "Not applicable"
+  - name: language
+    label: "Reply language"
+    type: select
+    required: true
+    options: ["English", "Hindi", "Telugu", "Tamil", "Bengali", "Marathi", "Kannada", "Malayalam", "Gujarati", "Odia", "Punjabi"]
+    default: "English"
+  - name: state
+    label: "Your State / UT (optional)"
+    type: text
+    required: false
+output:
+  format: html
+security:
+  networkEgress: none

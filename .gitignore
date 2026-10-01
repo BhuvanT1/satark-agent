@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+eval/results*.json
+*.zip
+aikart-test/
+docs/SUBMISSION_KIT.md
