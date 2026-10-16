@@ -2,7 +2,7 @@
 
 **Detect the scam. Act in the golden hour.**
 
-[![ci](https://github.com/BhuvanT1/satark-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/BhuvanT1/satark-agent/actions/workflows/ci.yml) · Docker image: `docker.io/architects1221/satark-agent:1.0.0`
+[![ci](https://github.com/BhuvanT1/satark-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/BhuvanT1/satark-agent/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) · Docker image: `docker.io/architects1221/satark-agent:1.0.0`
 
 Satark is an AI agent for the moment a person in India gets a suspicious SMS, WhatsApp message or call — or has just lost money to one. It investigates the message with forensic tools, returns a verdict that can't be talked down, works out where the person is in the scam, starts the golden-hour clock, and hands over a ready-to-file response pack in their own language.
 
@@ -173,3 +173,7 @@ aikart-manifest*.yaml, Dockerfile, eval/, tests/, samples/, docs/
 ## Team
 
 **The Latent Architects** - Themballi Bhuvan (team leader), Jaideep Kundu, Kashak Singh
+
+## Licence
+
+[MIT](LICENSE).
